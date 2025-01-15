@@ -1,0 +1,72 @@
+# javaDoc
+doc/
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+# Игнорировать скомпилированные файлы и артефакты сборки
+/target/*
+
+# Eclipse
+# Игнорировать файлы проекта Eclipse
+.classpath
+.project
+.settings/
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~
+
+# Игнорировать файлы проекта IntelliJ IDEA
+*.iml
+*.iws
+*.ipr
+.idea/
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# Gradle
+.gradle/
+build/
+
+# Spring Boot
+bin/
+build/
+!target/
+!src/main/
+!src/test/
+/target/
+
+# docker-compose
+docker-compose.yml
