@@ -1,4 +1,4 @@
-package ru.example.EmailVerifier.config;
+package ru.example.Email_Verifier.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +17,10 @@ public class AdaptiveThreadPoolConfig {
 	protected Executor taskExecutor() {
 		// доступные процессоры
 		int availableProcessors = Runtime.getRuntime().availableProcessors();
+		// доступная память (ОЗУ)
 		Long maxMemory = Runtime.getRuntime().maxMemory() / (1024 * 1024);
 		int calculatedQueueCapacity = (int) (maxMemory / 1.7);
+
 		int queueCapacity = Math.min(calculatedQueueCapacity, 4000); // Ограничение сверху, до 4000 задач
 
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

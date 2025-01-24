@@ -17,7 +17,7 @@ public class KafkaTopicConfig {
 
 	@Bean
 	NewTopic emailVerifierTopic() {
-		return TopicBuilder.name("email_verifier")
+		return TopicBuilder.name("${kafka.topic.name}")
 				.partitions(concurrency)
 				.replicas(1)
 				.build();
