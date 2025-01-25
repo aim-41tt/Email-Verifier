@@ -68,5 +68,5 @@ build/
 !src/test/
 /target/
 
-# docker-compose
-docker-compose.yml
+# docker
+.env
