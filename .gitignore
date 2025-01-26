@@ -30,6 +30,7 @@ tmp/
 *.class
 
 # Log files
+/logs/*
 *.log
 
 # BlueJ files
