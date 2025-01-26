@@ -1,5 +1,7 @@
 package ru.example.Email_Verifier.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -12,30 +14,35 @@ import java.util.concurrent.Executor;
 @EnableAsync // Включение асинхронности
 public class AdaptiveThreadPoolConfig {
 
-	@Bean(name = "defaultTaskExecutor")
-	@Primary // этот бин будет использоваться по умолчанию
-	protected Executor taskExecutor() {
-		// доступные процессоры
-		int availableProcessors = Runtime.getRuntime().availableProcessors();
-		// доступная память (ОЗУ)
-		Long maxMemory = Runtime.getRuntime().maxMemory() / (1024 * 1024);
-		int calculatedQueueCapacity = (int) (maxMemory / 1.7);
+    private static final Logger logger = LoggerFactory.getLogger(AdaptiveThreadPoolConfig.class);
 
-		int queueCapacity = Math.min(calculatedQueueCapacity, 4000); // Ограничение сверху, до 4000 задач
+    @Bean(name = "defaultTaskExecutor")
+    @Primary // Этот бин будет использоваться по умолчанию
+    protected Executor taskExecutor() {
+        // Получение доступных ресурсов
+        int availableProcessors = Runtime.getRuntime().availableProcessors();
+        long maxMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024);
 
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        // Вычисление ёмкости очереди
+        int calculatedQueueCapacity = (int) (maxMemoryMB / 1.7);
+        int queueCapacity = Math.min(calculatedQueueCapacity, 4000); // Лимит на 4000 задач
 
-		executor.setCorePoolSize(availableProcessors * 2);
-		executor.setMaxPoolSize(availableProcessors * 4);
-		executor.setQueueCapacity(queueCapacity);
-		executor.setThreadNamePrefix("Thread-");
+        logger.info("Настройка пула потоков: доступно процессоров={}, макс. память={}MB, ёмкость очереди={}",
+                availableProcessors, maxMemoryMB, queueCapacity);
 
-		// Обработка задач, если очередь переполнена
-		executor.setRejectedExecutionHandler((r, exec) -> {
-			System.err.println("Задача отклонена: " + r.toString());
-		});
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
-		executor.initialize();
-		return executor;
-	}
+        executor.setCorePoolSize(availableProcessors * 2); // Основное количество потоков
+        executor.setMaxPoolSize(availableProcessors * 4);  // Максимальное количество потоков
+        executor.setQueueCapacity(queueCapacity);          // Размер очереди задач
+        executor.setThreadNamePrefix("AdaptivePool-");     // Префикс имени потоков
+
+        // Обработка задач, если очередь переполнена
+        executor.setRejectedExecutionHandler((r, exec) -> {
+            logger.error("Задача отклонена: {}", r.toString());
+        });
+
+        executor.initialize();
+        return executor;
+    }
 }

@@ -1,13 +1,17 @@
 package ru.example.Email_Verifier.DTO.request;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import ru.example.Email_Verifier.entity.enums.MessageType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EmailMessageDTO {
-
+	
+	@NotEmpty(message = "Email не должен быть пустым")
+	@Email(message = "Некорректный формат email")
 	private String email;
 	@JsonProperty("messageType")
 	private MessageType messageType;
