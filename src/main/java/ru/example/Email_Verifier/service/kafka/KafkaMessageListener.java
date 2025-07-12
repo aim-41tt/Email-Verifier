@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class KafkaMessageListener {
 	}
 
 	@KafkaListener(topics = "${kafka.topic.name}")
-	public void onMessage(@Payload EmailMessageDTO message, ConsumerRecord<String, String> record) {
+	public void onMessage(@Payload EmailMessageDTO message, ConsumerRecord<String, String> record,Acknowledgment acknowledgmen) {
 		logger.info("Received message from topic: {}, partition: {}, offset: {}", record.topic(), record.partition(),
 				record.offset());
 
@@ -40,9 +41,11 @@ public class KafkaMessageListener {
 				logger.warn("Unknown message type: {}", message.getMessageType());
 				break;
 			}
+			acknowledgmen.acknowledge();
 		} catch (Exception e) {
 			handleError(e, record);
 		}
+		
 	}
 
 	private void handleError(Exception e, ConsumerRecord<String, String> record) {

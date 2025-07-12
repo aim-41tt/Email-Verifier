@@ -59,6 +59,8 @@ services:
       CONSUMER_TOPIC_NAME: verifer
       GMAIL_USERNAME:  ${GMAIL_USERNAME}
       GMAIL_PASSWORD_APP: ${GMAIL_PASSWORD_APP}
+	  #LOG_LEVEL: debug error fatal info off trace warn
+	  LOG_LEVEL: warn 
     ports:
       - "8080:8080"
     depends_on:
