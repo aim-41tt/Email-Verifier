@@ -8,16 +8,16 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class KafkaTopicConfig {
+	
 	private final int concurrency;
-
 	
 	public KafkaTopicConfig(@Value("${KAFKA_LISTENER_CONCURRENCY}") int concurrency) {
 		this.concurrency = concurrency;
 	}
 
 	@Bean
-	NewTopic emailVerifierTopic() {
-		return TopicBuilder.name("${kafka.topic.name}")
+	protected NewTopic emailVerifierTopic(@Value("${kafka.topic.name}")String topicName) {
+		return TopicBuilder.name(topicName)
 				.partitions(concurrency)
 				.replicas(1)
 				.build();
